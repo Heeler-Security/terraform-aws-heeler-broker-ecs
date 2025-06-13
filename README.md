@@ -1,3 +1,9 @@
+## Setup
+
+1. Setup VPC
+2. Setup public/private subnets. private subnets need to reach out to secrets manager. ensure NAT and IGW are setup on private and public subnet respectively. 
+
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.
@@ -39,11 +45,12 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_broker_image"></a> [broker\_image](#input\_broker\_image) | n/a | `any` | n/a | yes |
-| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `any` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `any` | n/a | yes |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `any` | n/a | yes |
+| <a name="input_broker_image"></a> [broker\_image](#input\_broker\_image) | Thge location of the broker image | `string` | `"654654247928.dkr.ecr.us-east-1.amazonaws.com/broker:latest"` | no |
+| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Array of subnet ids. Subnets need internet access. ECS tasks will be run here | `array` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | The region to deploy the broker | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The id of the vpc where the broker will run in | `string` | n/a | yes |
 
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
