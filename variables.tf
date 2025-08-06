@@ -1,6 +1,6 @@
 variable "private_subnet_ids" {
    description = "Array of subnet ids. Subnets need internet access. ECS tasks will be run here"
-   type = array 
+   type = list(string)
 }
 
 variable "region" {
