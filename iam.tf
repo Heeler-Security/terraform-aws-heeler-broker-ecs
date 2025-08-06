@@ -82,6 +82,36 @@ resource "aws_iam_role_policy_attachment" "broker_role_attachment2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+data "aws_iam_policy_document" "ecs_permissions_doc" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ecs:UpdateService",        # Needed to force a new deployment
+      "ecs:DescribeTasks",        # Needed to describe tasks
+      "ecs:ListTasks",            # Often needed to get task ARNs
+      "ecs:DescribeServices",     # Describe ECS services
+      "ecs:DescribeTaskDefinition" # Optional but useful for getting task details
+    ]
+
+    resources = [
+      aws_ecs_cluster.broker_ecs_cluster.arn,
+      aws_ecs_service.ecs_service_broker.id,
+      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:task/${aws_ecs_cluster.broker_ecs_cluster.name}/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "ecs_permissions" {
+   name = "broker-ecs-permissions"
+   policy = data.aws_iam_policy_document.ecs_permissions_doc.json
+}
+
+resource "aws_iam_role_policy_attachment" "broker_role_attachment4" {
+  role      = aws_iam_role.broker_role.name
+  policy_arn = aws_iam_policy.ecs_permissions.arn
+}
+
 data "aws_iam_policy_document" "broker_secrets_policy_doc" {
    statement {
      effect = "Allow"
